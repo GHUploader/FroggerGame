@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="FroggerGame" uploadOnCheckin="479ef556-cf2d-4c42-891f-ab22da09548a">
+    <serverData>
+      <paths name="FroggerGame">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myUploadOnCheckinName" value="FroggerGame" />
+  </component>
+</project>

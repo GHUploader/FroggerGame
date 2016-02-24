@@ -14,6 +14,7 @@ var ctx;
 
 var shouldRun;
 var mainPlayer;
+var world;
 
 var xOffset;
 var yOffset;
@@ -27,12 +28,20 @@ function init()
 {
     initLayout();
 
+    //load the data first
+
+    carImage = new Image();
+    carImage.src = "resources/car.png";
+
+    frogImage = new Image();
+    frogImage.src = "resources/frog.png";
+
     //  Start the program.
 
     reset();
     start();
 
-    //load the data first
+
 }
 
 function initGlobals()
@@ -41,6 +50,7 @@ function initGlobals()
     ctx = canvas.getContext("2d");
     shouldRun = false;
     mainPlayer = new MainPlayer(ctx, canvas.width / 2 - 5, canvas.height - 15);
+	world = new World(canvas, ctx);
     xOffset = 0;
     yOffset = 0;
 }
@@ -55,11 +65,13 @@ function start()
 {
     shouldRun = true;
     requestAnimationFrame(update);
+    mountEventListeners();
 }
 
 function stop()
 {
     shouldRun = false;
+    dismountEventListeners();
 }
 
 function reset()
@@ -67,12 +79,25 @@ function reset()
     //TODO: reset the entire program to its initial state
 
     initGlobals();
+
 }
 
 /*
     ****************************************************************
     * **************************************************************
 */
+
+function mountEventListeners()
+{
+    document.addEventListener("keydown", onKeyDown, false);
+    document.addEventListener("keyup", onKeyUp, false);
+}
+
+function dismountEventListeners()
+{
+    document.removeEventListener("keydown", onKeyDown, false);
+    document.removeEventListener("keyup", onKeyUp, false);
+}
 
 function update()
 {
@@ -95,9 +120,12 @@ function updateLocations()
 
 function draw()
 {
-    //TODO: add all of the code respocible for drawing components on the screen here
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    //TODO: add all of the code responsible for drawing components on the screen here
 
     mainPlayer.draw();
+	world.gObj.draw();
 }
 
 
@@ -111,12 +139,59 @@ function draw()
 
 function onKeyDown(event)
 {
+    switch (event.keyCode)
+    {
+        case 87:               // up
+            onWDown();
+            break;
 
+        case 83:               // down
+            onSDown();
+            break;
+
+        case 65:                // left
+            onADown();
+            break;
+
+        case 68:               // right
+            onDDown();
+            break;
+
+        default:
+
+            // nothing to put here
+    }
+}
+
+function onKeyUp(event)
+{
+    switch (event.keyCode)
+    {
+        case 87:               // up
+            onWUp();
+            break;
+
+        case 83:               // down
+            onSUp();
+            break;
+
+        case 65:                // left
+            onAUp();
+            break;
+
+        case 68:               // right
+            onAUp();
+            break;
+
+        default:
+
+        // nothing to put here
+    }
 }
 
 function onWDown()
 {
-    yOffset = acceleration;
+    yOffset = -acceleration;
 }
 
 function onWUp()
@@ -126,7 +201,7 @@ function onWUp()
 
 function  onSDown()
 {
-    yOffset = -acceleration;
+    yOffset = acceleration;
 }
 
 function  onSUp()
@@ -134,5 +209,22 @@ function  onSUp()
     yOffset = 0;
 }
 
+function onADown()
+{
+    xOffset = -acceleration;
+}
 
+function onAUp()
+{
+    xOffset = 0;
+}
 
+function onDDown()
+{
+    xOffset = acceleration;
+}
+
+function onDUp()
+{
+    xOffset = 0;
+}

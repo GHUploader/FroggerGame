@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="479ef556-cf2d-4c42-891f-ab22da09548a" name="FroggerGame" url="http://github.com">
+        <fileTransfer host="github.com" port="21" rootFolder="/GHUploader/FroggerGame.git" username="GHUploader">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

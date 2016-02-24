@@ -2,12 +2,25 @@
  * Created by bozhanov1512 on 2/10/2016.
  */
 
+/*
+    ********************************************************
+    * Globals
+    *
+ */
 
+var frogImage;
+
+/*
+    *
+    * ******************************************************
+ */
 
 function MainPlayer(ctx, x, y)
 {
     this.gObj = new GameComponent(ctx, this.onDraw, x, y, 0, 0);
     this.gObj.setObjSender(this);
+    this.width = 50;
+    this.height = 50
 }
 
 MainPlayer.prototype.draw = function()
@@ -30,11 +43,13 @@ MainPlayer.prototype.onDraw = function(objSender, ctx, x, y, width, height)
 
 MainPlayer.prototype.iDrawFrog = function(ctx, x, y)
 {
-    var width = 10;
-    var height = 10;
+    /*
     ctx.fillStyle = "green";
     ctx.strokeStyle = "green";
-    fillCircle(ctx, Math.min(width, height), x + width / 2, y + height / 2);
+    fillCircle(ctx, Math.min(this.width, this.height), x + this.width / 2, y + this.height / 2);
+    //*/
+
+    ctx.drawImage(frogImage, x, y, this.width, this.height);
 
 };
 

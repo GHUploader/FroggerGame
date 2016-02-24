@@ -190,3 +190,18 @@ function getOffsets(slope, speed)
     }
     scaleTo(slope, 1, speed);
 }
+
+function fillArray(arr, nSize, cell)
+{
+    for(i = 0; i < nSize; ++i)
+    {
+        arr[i] = cell;
+    }
+	return arr;                                                             // No references?
+}
+
+
+function getRandom(offset, multiplier)
+{
+    return Math.round(Math.random() * multiplier) + offset;
+}
