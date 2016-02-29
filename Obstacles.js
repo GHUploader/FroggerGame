@@ -31,7 +31,7 @@ var carImage;
 
 function Obstacle(ctx, x, y, width, height)
 {
-	this.gObj = new GameComponent(ctx, this.onDraw, x, y, width, height);
+	this.gObj = new GameComponent(ctx, this.onDraw, new Point(x, y), width, height);
 }
 
 /**
@@ -65,9 +65,15 @@ function Car(ctx)
 	this.xOffset = 0;
 }
 
+Car.prototype.draw = function()
+{
+	this.oObj.gObj.draw();
+};
+
 Car.prototype.iDraw = function(objSender, ctx, x, y, w, h)
 {
-	objSender.oObj.gObj.x += objSender.xOffset;
+	var curPosition = objSender.oObj.gObj.getPosition();
+	objSender.oObj.gObj.setX(curPosition.x + objSender.xOffset);
 	ctx.drawImage(objSender.image, x, y);					// automatically update the position based on the speed each time the car is redrawn
 };
 
@@ -97,5 +103,32 @@ Car.prototype.setSpeed = function(speed)
 {
 	this.speed = speed;
 	this.xOffset = this.direction * this.speed;
+};
+
+Car.prototype.setX = function(x)
+{
+	this.oObj.gObj.setX(x);
+};
+
+Car.prototype.setY = function(y)
+{
+	this.oObj.gObj.setY(y);
+};
+
+Car.prototype.getX = function()
+{
+	return this.oObj.gObj.getX();
+};
+
+Car.prototype.getY = function()
+{
+	return this.oObj.gObj.getY();
+};
+
+Car.prototype.getCollisionParams = function()
+{
+	var cParams = this.oObj.gObj.getCollisionParams();
+	cParams.type = "obstacle";
+	return cParams;
 };
 

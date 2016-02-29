@@ -55,6 +55,40 @@ function dEllipse(context, width, height, x, y)
     context.stroke();
 }
 
+function getNextWord(str, lastSpace)
+{
+	var sLenght = str.length;
+	var i = lastSpace;
+	while(str[i] != " " && i < sLenght)
+	{
+		++i;
+	}
+	return str.substr(lastSpace, i - lastSpace);
+}
+
+function formatStr(str, cWidth)     // width in terms of characters, not pixels
+{
+	var nextStr = str;
+	var nStr = "";
+	var index = 0;                  // index will jump by the length of a word (str)
+	while(nextStr[index] != str[str.length])
+	{
+		var nextWord = getNextWord(nextStr, index);
+		if(nextWord.length + index < cWidth)
+		{
+			index += nextWord.length + 1;
+			nStr += nextWord + " ";
+		}
+		else
+		{
+			nStr += "\n";
+			nextStr = nextStr.substr(index, nextStr.length);
+			index = 0;
+		}
+	}
+	return nStr;
+}
+
 function drawText(context, fontsize, text, x, y)
 {
     var lastNLIndex = 0;

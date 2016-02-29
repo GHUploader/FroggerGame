@@ -17,10 +17,10 @@ var frogImage;
 
 function MainPlayer(ctx, x, y)
 {
-    this.gObj = new GameComponent(ctx, this.onDraw, x, y, 0, 0);
+	this.width = 50;
+	this.height = 50;
+    this.gObj = new GameComponent(ctx, this.onDraw, new Point(x, y), this.width, this.height);
     this.gObj.setObjSender(this);
-    this.width = 50;
-    this.height = 50
 }
 
 MainPlayer.prototype.draw = function()
@@ -76,4 +76,9 @@ MainPlayer.prototype.getX = function()
 MainPlayer.prototype.getY = function()
 {
     return this.gObj.getY();
+};
+
+MainPlayer.prototype.getPosition = function()
+{
+    return this.gObj.getPosition();
 };

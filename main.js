@@ -15,14 +15,23 @@ var ctx;
 var shouldRun;
 var mainPlayer;
 var world;
+var collision;
+var textLabel;
+var finishLine;
+var points;
+var level;
 
 var xOffset;
 var yOffset;
 var acceleration = 5;
+var frameHandle = null;
 
 /*
     ****************************************************************
 */
+
+var carImgLoaded = false;
+var frogImgLoaded = false;
 
 function init()
 {
@@ -31,28 +40,58 @@ function init()
     //load the data first
 
     carImage = new Image();
-    carImage.src = "resources/car.png";
+	/*carImage.onload = function() // there was an error reading the width and height of the images before this was done
+	{
+		if(frogImgLoaded)           // if both are loaded at the same time, then the game does not start, fix by adding interval
+		{
+			initContinue();
+		}
+		carImgLoaded = true;
+	};//*/
+	carImage.src = "resources/car.png";
 
     frogImage = new Image();
+	/*frogImage.onload = function()
+	{
+		if(carImgLoaded)
+		{
+			initContinue();
+		}
+		carImgLoaded = true;
+	};//*/
     frogImage.src = "resources/frog.png";
 
     //  Start the program.
-
-    reset();
-    start();
-
+	setTimeout(initContinue, 1250);
 
 }
 
-function initGlobals()
+function initContinue()
+{
+	reset();
+	start();
+}
+
+function initGGlobals()
 {
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     shouldRun = false;
     mainPlayer = new MainPlayer(ctx, canvas.width / 2 - 5, canvas.height - 15);
 	world = new World(canvas, ctx);
+	collision = new Collision(mainPlayer.gObj.getRect());
+	textLabel = new Text(ctx, new Point(10, canvas.height - 100));
+	textLabel.setText("Points: " + points + "\nLevel: " + level);
+	finishLine = new FinishLine(canvas, ctx);
     xOffset = 0;
     yOffset = 0;
+}
+
+function initGlobals()
+{
+	points = 0;
+	level = 0;
+	initGGlobals();
 }
 
 /*
@@ -63,15 +102,22 @@ function initGlobals()
 
 function start()
 {
-    shouldRun = true;
-    requestAnimationFrame(update);
-    mountEventListeners();
+	setTimeout(function(){
+		shouldRun = true;
+		mountEventListeners();
+		frameHandle = requestAnimationFrame(update);
+	}, 10);
 }
 
 function stop()
 {
     shouldRun = false;
     dismountEventListeners();
+	if(frameHandle)
+	{
+		cancelAnimationFrame(frameHandle);
+		frameHandle = null;
+	}
 }
 
 function reset()
@@ -105,6 +151,7 @@ function update()
 
     updateLocations();
     draw();
+	checkCollision();
 
     if(shouldRun)
     {
@@ -114,8 +161,9 @@ function update()
 
 function updateLocations()
 {
-    mainPlayer.gObj.x += xOffset;
-    mainPlayer.gObj.y += yOffset;
+	var mainPlayerPos = mainPlayer.getPosition();
+    mainPlayer.setX(mainPlayerPos.x + xOffset);
+    mainPlayer.setY(mainPlayerPos.y + yOffset);
 }
 
 function draw()
@@ -124,10 +172,43 @@ function draw()
 
     //TODO: add all of the code responsible for drawing components on the screen here
 
+	finishLine.draw();
     mainPlayer.draw();
 	world.gObj.draw();
+	textLabel.draw();
+
 }
 
+function checkCollision()
+{
+	collision.cParams = world.getCollisionParams();
+	collision.cParams.push(finishLine.getCollisionParams());
+	collision.point = mainPlayer.getPosition();
+	if(collision.paramsContainPoint())
+	{
+		stop();
+		if(collision.typeHit == "obstacle")
+		{
+			carHit();
+		}
+		if(collision.typeHit == "finish")
+		{
+			finishLineReached();
+		}
+		initGGlobals();                 // reinitialization of game components will set the new points count and level
+		start();
+	}
+}
+
+function carHit()
+{
+	points -= 10;
+}
+
+function finishLineReached()
+{
+	points += 50;
+}
 
 
 /*
