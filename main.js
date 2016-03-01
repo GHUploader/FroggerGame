@@ -208,6 +208,12 @@ function carHit()
 function finishLineReached()
 {
 	points += 50;
+	var threshold = 50 * (level + 1);
+	if(points >= threshold)
+	{
+		++level;
+		points -= threshold;
+	}
 }
 
 
